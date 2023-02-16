@@ -19,32 +19,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 
 
-
 public class App {
 
     public static void main(String[] args) {
         Frame mainFrame = new Frame("MadMouse");
         mainFrame.setSize(100, 100);
         Button mainButton = new Button("Start");
-        mainButton.addActionListener(new ButtonListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Button curButton = (Button) e.getSource();
-                switch (e.getActionCommand()){
-                    case "Start":
-                        curButton.setLabel("Stop");
-                        madTimer = new Timer();
-                        madTimer.schedule(new MadMouseMove(), 500, 1000);
-                        break;
-                    case "Stop":
-                        curButton.setLabel("Start");
-                        madTimer.cancel();
-                        madTimer.purge();
-                        break;
-                }
-            }
-            
-        });
+        mainButton.addActionListener(new ButtonListener());
         mainFrame.add(mainButton);
         mainFrame.setVisible(true);
         mainFrame.addWindowListener(new WindowAdapter() {
@@ -55,13 +36,28 @@ public class App {
             }
         );
     }
-
 }
 
-abstract class ButtonListener implements ActionListener{
+class ButtonListener implements ActionListener{
     Timer madTimer;
-}
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Button curButton = (Button) e.getSource();
+        switch (e.getActionCommand()){
+            case "Start":
+                curButton.setLabel("Stop");
+                madTimer = new Timer();
+                madTimer.schedule(new MadMouseMove(), 500, 1000);
+                break;
+            case "Stop":
+                curButton.setLabel("Start");
+                madTimer.cancel();
+                madTimer.purge();
+                break;
+        }
+    }
+}
 
 class MadMouseMove extends TimerTask{
     Robot madMouse;
