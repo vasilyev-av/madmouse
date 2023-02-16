@@ -155,3 +155,21 @@ SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
 2023.02.16 08:42:41 INFO  time: code lens generation in 3.97s
 Feb 16, 2023 8:44:04 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
 INFO: Unsupported notification method: $/setTrace
+Feb 16, 2023 8:47:58 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 50
+Feb 16, 2023 8:48:04 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 71
+Feb 16, 2023 8:48:04 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 72
+Feb 16, 2023 8:48:30 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 122
+2023.02.16 08:50:47 WARN  no build target for: /home/user/projects/madmouse/app/src/main/java/madmouse/App.java
+2023.02.16 09:51:46 WARN  no build target for: /home/user/projects/madmouse/app/src/test/java/madmouse/AppTest.java
+2023.02.16 09:51:48 INFO  time: code lens generation in 1.47s
+Feb 16, 2023 9:54:29 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 330
+Feb 16, 2023 9:54:29 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 331
+Feb 16, 2023 9:54:36 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 349
+2023.02.16 10:06:17 WARN  no build target for: /home/user/projects/madmouse/app/src/main/java/madmouse/App.java
