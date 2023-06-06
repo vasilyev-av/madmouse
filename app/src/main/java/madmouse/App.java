@@ -22,7 +22,6 @@ import java.util.TimerTask;
 import java.util.concurrent.ThreadLocalRandom;
 
 
-
 public class App {
 
     public static void main(String[] args) {
@@ -33,6 +32,7 @@ public class App {
         ButtonListener buttonListener = new ButtonListener();
         Button mainButton = new Button("Start");
         mainButton.addActionListener(buttonListener);
+
         TextField mainText = new TextField("1000");
         mainText.addTextListener(new TextListener(){
             @Override
@@ -44,7 +44,6 @@ public class App {
 
         mainFrame.add(mainText);
         mainFrame.add(mainButton);
-        //mainFrame.pack();
         mainFrame.setVisible(true);
         mainFrame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent we) {
@@ -60,7 +59,6 @@ class ButtonListener implements ActionListener{
     Timer madTimer;
 
     private int period = 1000;
-
     public void setPeriod(int jumpTime) {
         period = jumpTime;
     }
