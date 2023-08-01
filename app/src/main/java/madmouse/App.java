@@ -11,6 +11,7 @@ import java.awt.AWTException;
 import java.awt.Button;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.TextEvent;
 import java.awt.event.TextListener;
 import java.awt.event.WindowEvent;
@@ -132,5 +133,7 @@ class MadMouseMove extends TimerTask{
             } else {
                 prevPoint = curPoint;
             }
+
+            madMouse.keyRelease(KeyEvent.VK_SHIFT);
     }
 }
