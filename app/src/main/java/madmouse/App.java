@@ -14,9 +14,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.TextEvent;
 import java.awt.event.TextListener;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.awt.event.WindowAdapter;
 import java.awt.Robot;
 import java.awt.TextField;
+import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ThreadLocalRandom;
@@ -28,17 +32,33 @@ public class App {
         Frame mainFrame = new Frame("MadMouse");
         mainFrame.setSize(100, 100);
         mainFrame.setLayout(new GridLayout(2, 1));
-        
-        ButtonListener buttonListener = new ButtonListener();
+
+        Properties mainProp = new Properties();
+        String delayFile = System.getProperty("user.home") + "/madmouse.ini";
+        String delayText = "1000";
+        try {
+            (new File(delayFile)).createNewFile();
+            FileReader mainReader = new FileReader(delayFile);
+            mainProp.load(mainReader);
+            mainReader.close();
+        } catch(Exception e){System.out.print(e.getMessage());}
+        delayText = mainProp.getProperty("delay", "1000");
+
+        ButtonListener buttonListener = new ButtonListener(Integer.parseInt(delayText));
         Button mainButton = new Button("Start");
         mainButton.addActionListener(buttonListener);
 
-        TextField mainText = new TextField("1000");
+        TextField mainText = new TextField(delayText);
         mainText.addTextListener(new TextListener(){
             @Override
             public void textValueChanged(TextEvent e) {
-                
-                buttonListener.setPeriod(Integer.parseInt(mainText.getText()));
+                String delayText=mainText.getText();
+                buttonListener.setPeriod(Integer.parseInt(delayText));
+                mainProp.setProperty("delay", delayText);
+                try {
+                    FileWriter mainwriter = new FileWriter(delayFile);
+                    mainProp.store(mainwriter, "");
+                } catch (Exception d) {System.out.print(d.getMessage());}
             }
         });
 
@@ -57,8 +77,16 @@ public class App {
 
 class ButtonListener implements ActionListener{
     Timer madTimer;
+    private int period;
 
-    private int period = 1000;
+    ButtonListener(){
+        period = 1000;
+    }
+
+    ButtonListener(int delay){
+        period = delay;
+    }
+
     public void setPeriod(int jumpTime) {
         period = jumpTime;
     }
