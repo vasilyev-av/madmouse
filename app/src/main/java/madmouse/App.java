@@ -112,6 +112,7 @@ class ButtonListener implements ActionListener{
 
 class MadMouseMove extends TimerTask{
     Robot madMouse;
+    int[] keys = {KeyEvent.VK_SHIFT, KeyEvent.VK_CONTROL};
 
     private Point prevPoint = MouseInfo.getPointerInfo().getLocation();
 
@@ -133,7 +134,8 @@ class MadMouseMove extends TimerTask{
             } else {
                 prevPoint = curPoint;
             }
-
-            madMouse.keyRelease(KeyEvent.VK_SHIFT);
+            int curKey = keys[ThreadLocalRandom.current().nextInt(0, 1)];
+            madMouse.keyPress(curKey);
+            madMouse.keyRelease(curKey);
     }
 }
