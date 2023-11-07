@@ -9,8 +9,11 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.AWTException;
 import java.awt.Button;
+import java.awt.Checkbox;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.TextEvent;
 import java.awt.event.TextListener;
@@ -31,12 +34,13 @@ public class App {
 
     public static void main(String[] args) {
         Frame mainFrame = new Frame("MadMouse");
-        mainFrame.setSize(100, 100);
+        mainFrame.setSize(150, 100);
         mainFrame.setLayout(new GridLayout(2, 1));
 
         Properties mainProp = new Properties();
         String delayFile = System.getProperty("user.home") + "/madmouse.ini";
         String delayText = "1000";
+        boolean useKeys = true;
         try {
             (new File(delayFile)).createNewFile();
             FileReader mainReader = new FileReader(delayFile);
@@ -44,8 +48,9 @@ public class App {
             mainReader.close();
         } catch(Exception e){System.out.print(e.getMessage());}
         delayText = mainProp.getProperty("delay", "1000");
+        useKeys = mainProp.getProperty("keys", "1") == "1" ? true : false;
 
-        ButtonListener buttonListener = new ButtonListener(Integer.parseInt(delayText));
+        ButtonListener buttonListener = new ButtonListener(Integer.parseInt(delayText), useKeys);
         Button mainButton = new Button("Start");
         mainButton.addActionListener(buttonListener);
 
@@ -63,7 +68,20 @@ public class App {
             }
         });
 
+        Checkbox mainCheck = new Checkbox("use keys", useKeys);
+        mainCheck.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				Boolean useKeys=(e.getStateChange() == 1 ? true : false);
+				mainProp.setProperty("keys", useKeys.toString());
+                try {
+                    FileWriter mainwriter = new FileWriter(delayFile);
+                    mainProp.store(mainwriter, "");
+                } catch (Exception d) {System.out.print(d.getMessage());}
+			}
+		});
+
         mainFrame.add(mainText);
+        mainFrame.add(mainCheck);
         mainFrame.add(mainButton);
         mainFrame.setVisible(true);
         mainFrame.addWindowListener(new WindowAdapter() {
@@ -79,13 +97,30 @@ public class App {
 class ButtonListener implements ActionListener{
     Timer madTimer;
     private int period;
+    private boolean pressKey;
 
     ButtonListener(){
         period = 1000;
+        pressKey = true;
     }
 
     ButtonListener(int delay){
         period = delay;
+        pressKey = true;
+    }
+
+    ButtonListener(boolean useKeys){
+        period = 1000;
+        pressKey = useKeys;
+    }
+
+    ButtonListener(int delay, boolean useKeys){
+        period = delay;
+        pressKey = useKeys;
+    }
+
+    public void setKeys(boolean useKeys) {
+         pressKey = useKeys;
     }
 
     public void setPeriod(int jumpTime) {
@@ -99,7 +134,7 @@ class ButtonListener implements ActionListener{
             case "Start":
                 curButton.setLabel("Stop");
                 madTimer = new Timer();
-                madTimer.schedule(new MadMouseMove(), period, period);
+                madTimer.schedule(new MadMouseMove(pressKey), period, period);
                 break;
             case "Stop":
                 curButton.setLabel("Start");
@@ -112,6 +147,7 @@ class ButtonListener implements ActionListener{
 
 class MadMouseMove extends TimerTask{
     Robot madMouse;
+    boolean pressKey = true;
     int[] keys = {KeyEvent.VK_SHIFT, KeyEvent.VK_CONTROL};
 
     private Point prevPoint = MouseInfo.getPointerInfo().getLocation();
@@ -124,6 +160,15 @@ class MadMouseMove extends TimerTask{
         }
     }
 
+    MadMouseMove(boolean useKeys) {
+        try {
+            madMouse = new Robot();
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
+        this.pressKey = useKeys;
+    }
+
     @Override
     public void run() {
             Point curPoint = MouseInfo.getPointerInfo().getLocation();
@@ -134,8 +179,11 @@ class MadMouseMove extends TimerTask{
             } else {
                 prevPoint = curPoint;
             }
-            int curKey = keys[ThreadLocalRandom.current().nextInt(0, 1)];
-            madMouse.keyPress(curKey);
-            madMouse.keyRelease(curKey);
+            if (pressKey && ThreadLocalRandom.current().nextInt(0, 1) == 1) {
+                int curKey = keys[ThreadLocalRandom.current().nextInt(0, 1)];
+                madMouse.keyPress(curKey);
+                madMouse.keyRelease(curKey);
+            }
+            
     }
 }
