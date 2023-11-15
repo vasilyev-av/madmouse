@@ -181,7 +181,7 @@ class MadMouseMove extends TimerTask{
             Point curPoint = MouseInfo.getPointerInfo().getLocation();
 
             if (prevPoint.distance(curPoint) == 0) {
-                prevPoint = new Point(curPoint.x+ThreadLocalRandom.current().nextInt(-moveSize, ++moveSize), curPoint.y+ThreadLocalRandom.current().nextInt(-moveSize, ++moveSize));
+                prevPoint = new Point(curPoint.x+ThreadLocalRandom.current().nextInt(-moveSize, moveSize+1), curPoint.y+ThreadLocalRandom.current().nextInt(-moveSize, moveSize+1));
                 madMouse.mouseMove(prevPoint.x, prevPoint.y);
             } else {
                 prevPoint = curPoint;
@@ -190,7 +190,6 @@ class MadMouseMove extends TimerTask{
                 int curKey = keys[ThreadLocalRandom.current().nextInt(0, 2)];
                 madMouse.keyPress(curKey);
                 madMouse.keyRelease(curKey);
-                System.out.println(Integer.toString(curKey)+" key pressed");
             }
     }
 }
